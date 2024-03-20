@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # Password for your PFX file
-export PFX_PASSWORD="k@SHm1r"
+export PFX_PASSWORD="!!Certificate!!"
 
 # Name of the PFX file to process
-export PFX_FILE_IN="./test-cert.pfx"
+export PFX_FILE_IN="./vps.minara.co.tz.pfx"
+
+export FRONT_MATTER="./celebration.txt"
 
 
 
@@ -13,6 +15,7 @@ export PFX_FILE_IN="./test-cert.pfx"
 
 # Define the name of the output key file
 export KEY_FILE_OUT="${PFX_FILE_IN/.pfx/.nopassword.key}"
+export PEM_FILE_UNENCRYPTED_OUT="${PFX_FILE_IN/.pfx/.pem}"
 
 # Define the name of the output PFX file
 export PFX_FILE_OUT="${PFX_FILE_IN/.pfx/.nopassword.pfx}"
@@ -30,12 +33,11 @@ openssl pkcs12 -nocerts -in "$PFX_FILE_IN" -out private.key -password pass:"$PFX
 echo Removing passphrase from private key in file $KEY_FILE_OUT...
 openssl rsa -in private.key -out "$KEY_FILE_OUT" -passin pass:TemporaryPassword
 
-echo Building new PFX input file...
-cat private.key certificate.crt ca-cert.ca > pfx-in.pem
+echo Building new PEM input file...
+cat $FRONT_MATTER $KEY_FILE_OUT certificate.crt ca-cert.ca > $PEM_FILE_UNENCRYPTED_OUT
 
-echo Creating new PFX file $PFX_FILE_OUT...
-openssl pkcs12 -export -nodes -CAfile ca-cert.ca -in pfx-in.pem -passin pass:TemporaryPassword -passout pass:"" -out "$PFX_FILE_OUT"
+#echo Creating new PFX file $PFX_FILE_OUT...
+#openssl pkcs12 -export -nodes -CAfile ca-cert.ca -in pfx-in.pem -passin pass:TemporaryPassword -passout pass:"" -out "$PFX_FILE_OUT"
 
 echo Cleaning up...
-rm certificate.crt ca-cert.ca private.key pfx-in.pem
-
+rm certificate.crt ca-cert.ca private.key $KEY_FILE_OUT
