@@ -1,0 +1,7 @@
+Bag Attributes
+    Microsoft Local Key set: <No Values>
+    localKeyID: 01 00 00 00 
+    friendlyName: vps.minara.co.tz
+    Microsoft CSP Name: Microsoft Strong Cryptographic Provider
+Key Attributes
+    X509v3 Key Usage: 10
